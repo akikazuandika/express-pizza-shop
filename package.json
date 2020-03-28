@@ -1,0 +1,32 @@
+{
+  "name": "pizza-shop",
+  "version": "1.0.0",
+  "description": "Example RestApi using nodejs, express in study case pizza shop",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && babel src -d dist",
+    "start": "npm run build && pm2 start dist/index.js --name='pizza-shop' ",
+    "update": "npm run build && pm2 restart pizza-shop",
+    "dev": "sudo nodemon src/index.js --exec babel-node --presets @babel/preset-env",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Caca Wilda Andika",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/runtime": "^7.9.2",
+    "bcrypt": "^4.0.1",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.1.0",
+    "sequelize": "^5.21.5",
+    "uuid": "^7.0.2"
+  }
+}
