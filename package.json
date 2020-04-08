@@ -8,7 +8,7 @@
     "build": "npm run clean && babel src -d dist",
     "start": "npm run build && pm2 start dist/index.js --name='pizza-shop' ",
     "update": "npm run build && pm2 restart pizza-shop",
-    "dev": "sudo nodemon src/index.js --exec babel-node --presets @babel/preset-env",
+    "dev": "nodemon src/index.js --exec babel-node --presets @babel/preset-env",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Caca Wilda Andika",
