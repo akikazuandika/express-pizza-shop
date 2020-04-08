@@ -25,6 +25,11 @@ export default {
     },
     getById : async(req, res) => {
         let detail = await CategoryModel.findOne({ where : { id : req.params.id } })
+
+        if (detail == null) {
+            return NotFoundResponse(res, `Data with id ${req.params.id} not found`)
+        }
+
         return SuccessResponse(res, "Success get detail data ", detail)
     },
     create : async(req, res) => {
