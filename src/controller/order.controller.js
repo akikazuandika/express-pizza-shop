@@ -4,6 +4,7 @@ import OrderModel from '../model/order.model'
 import OrderItemModel from '../model/orderItem.model'
 import sequelize from '../database/connection'
 import { BadRequestResponse, SuccessResponse, CreatedResponse, NotFoundResponse, ServerErrorResponse } from '../lib/responses'
+import promise from 'bluebird'
 
 export default {
     getAll : async(req, res) => {
@@ -16,13 +17,17 @@ export default {
             limit : perpage
         })
 
+        for (let index = 0; index < ordersPerpage.length; index++) {
+            ordersPerpage[index] = await addItems(ordersPerpage[index])
+        }
+
         let orders = await OrderModel.findAndCountAll()
 
         let data = {
             page,
             perpage,
             total : orders.count,
-            data : ordersPerpage
+            orders : ordersPerpage
         }
 
         SuccessResponse(res, "Success get orders", data)
@@ -34,6 +39,8 @@ export default {
             return NotFoundResponse(res, `Data with id ${req.params.id} not found`)
         }
 
+        detail = await addItems(detail)
+        
         return SuccessResponse(res, "Success get detail data ", detail)
     },
     create : async(req, res) => {
@@ -75,6 +82,7 @@ export default {
             }
 
             await transaction.commit()
+            order = await addItems(order)
 
             return CreatedResponse(res, "Success create order", order)
         } catch (error) {
@@ -96,6 +104,21 @@ export default {
 
         await OrderModel.update(data , { where : { id : req.params.id } }, { new : true })
         let dataExist = await OrderModel.findOne({ where : { id : req.params.id } })
+        dataExist = await addItems(dataExist)
         return SuccessResponse(res, "Success update data ", dataExist)
     }
+}
+
+function addItems(order) {
+    return new promise(async(resolve, reject) => {
+        let items = await OrderItemModel.findAll({ where : { orderId : order.id }, attributes : { exclude : ["orderId, updatedAt"] } })
+        resolve({
+            id : order.id,
+            name : order.name,
+            address : order.address,
+            status : order.status,
+            createAt : order.createAt,
+            items
+        })
+    })
 }
