@@ -1,4 +1,3 @@
-import CategoryModel from '../model/category.model'
 import ProductModel from '../model/product.model'
 import OrderModel from '../model/order.model'
 import OrderItemModel from '../model/orderItem.model'
